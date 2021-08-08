@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Button, Label, Input } from "reactstrap";
 import * as Realm from "realm-web";
 // local import
 import { addTodoOffline } from "../redux/actions/app";
-var assert = require("assert");
+// var assert = require("assert");
 /**
  * Home Component of offline-first Boilerplate.
  * @name Home
@@ -14,14 +14,15 @@ function Home() {
   const app = Realm.App.getApp("mongodb-atlas-urepc"); 
   useEffect(() => {
     const getdata = async function () {
+      const user = await app.logIn(Realm.Credentials.anonymous());
       const mongodb = app.currentUser.mongoClient("mongodb-atlas");
       const plants = mongodb.db("myTest").collection("Dog");
-      // const result =  await plants.insertOne({
+      const result =  await plants.insertOne({
 
-      //     name: "lily of the valley",
-      //    id: "2",
-      //   });
-      //   console.log("a",result);
+          name: "lily of the valley",
+         id: "2",
+        });
+        console.log("a",result);
       const customData = await plants.find();
       console.log(customData);
     };
@@ -42,9 +43,17 @@ function Home() {
 
   const [todo, setTodo] = useState("");
 
-  const setTodoFunc = (e) => {
-    dispatch(addTodoOffline(todo));
-  };
+  const setTodoFunc = useCallback( async (e) => {
+    const user = await app.logIn(Realm.Credentials.anonymous());
+    const mongodb = app.currentUser.mongoClient("mongodb-atlas");
+    const plants = mongodb.db("myTest").collection("Dog");
+    const body = {
+      id: Math.random() + 'id' + Math.random(),
+      name: todo,
+    }
+    const result =  await plants.insertOne(body);
+    console.log("a",result);
+  }, [app, todo]);
 
   return (
     <>

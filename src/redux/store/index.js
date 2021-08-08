@@ -6,7 +6,7 @@ import logger from "redux-logger";
 import rootReducer from "../reducers";
 import * as localforage from "localforage";
 import axios from 'axios';
-import { devToolsEnhancer } from 'redux-devtools-extension';
+// import { devToolsEnhancer } from 'redux-devtools-extension';
 
 offlineConfig.persistOptions = { storage: localforage }; // store offline data in indexedDB
 
